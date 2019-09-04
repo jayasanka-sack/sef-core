@@ -1,29 +1,32 @@
-package org.sefglobal.core.partnership;
+package org.sefglobal.core.partnership.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "university")
-public class University {
+public class University extends AuditModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @NotNull
     private String name;
+
+    @NotNull
     private String ambassadorName;
+
+    @NotNull
     private String ambassadorEmail;
+
+    @NotNull
+    @Column(name = "imageUrl", length = 512)
     private String imageUrl;
 
-    public University() {
-    }
-
-    public University(String name, String ambassadorName, String ambassadorEmail, String imageUrl) {
-        this.name = name;
-        this.ambassadorName = ambassadorName;
-        this.ambassadorEmail = ambassadorEmail;
-        this.imageUrl = imageUrl;
-    }
+    @NotNull
+    @Column(name = "status", length = 10)
+    private String status;
 
     public int getId() {
         return id;
@@ -63,5 +66,13 @@ public class University {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

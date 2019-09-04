@@ -1,4 +1,4 @@
-package org.sefglobal.core.partnership;
+package org.sefglobal.core.partnership.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

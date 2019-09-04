@@ -11,6 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>partnership</artifactId>
+    <packaging>war</packaging>
 
     <dependencies>
         <dependency>
@@ -58,6 +59,13 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <packagingExcludes>WEB-INF/lib/*cxf*.jar</packagingExcludes>
+                    <warName>api#partnership#v1</warName>
+                </configuration>
             </plugin>
         </plugins>
     </build>

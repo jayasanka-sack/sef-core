@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.sefglobal</groupId>
-    <artifactId>core-api</artifactId>
+    <artifactId>sef-core</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
