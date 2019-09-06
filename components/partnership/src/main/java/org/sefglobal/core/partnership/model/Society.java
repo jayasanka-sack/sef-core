@@ -27,7 +27,7 @@ public class Society extends AuditModel{
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "university_id", nullable = false)
+    @JoinColumn(name = "universityId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private University university;
