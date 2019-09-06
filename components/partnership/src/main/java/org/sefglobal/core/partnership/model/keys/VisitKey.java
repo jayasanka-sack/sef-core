@@ -28,4 +28,20 @@ public class VisitKey implements Serializable {
 
     public VisitKey() {
     }
+
+    public int getEventId() {
+        return eventId;
+    }
+
+    public int getSocietyId() {
+        return societyId;
+    }
+
+    public int getIntervalValue() {
+        return intervalValue;
+    }
+
+    public String getIp() {
+        return ip;
+    }
 }

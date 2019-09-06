@@ -27,7 +27,7 @@ public class UniversityController {
     }
 
     @PostMapping("/universities")
-    public University createUniversity(@ModelAttribute University university){
+    public University createUniversity(@RequestBody University university){
         return universityRepository.save(university);
     }
 
