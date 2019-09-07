@@ -1,5 +1,11 @@
 package org.sefglobal.core.partnership.beans;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * Represent a University registered with SEF
+ */
 public class University {
     private int id;
 
@@ -7,7 +13,6 @@ public class University {
 
     private String ambassadorName;
 
-    private String ambassadorEmail;
 
     private String imageUrl;
 
@@ -16,13 +21,24 @@ public class University {
     public University() {
     }
 
-    public University(int id, String name, String ambassadorName, String ambassadorEmail, String imageUrl, String status) {
+    public University(int id, String name, String ambassadorName, String imageUrl, String status) {
         this.id = id;
         this.name = name;
         this.ambassadorName = ambassadorName;
-        this.ambassadorEmail = ambassadorEmail;
         this.imageUrl = imageUrl;
         this.status = status;
+    }
+
+    /**
+     * Returns a new University object using SQL result set
+     * @param resultSet a SQL result set object containing an event
+     */
+    public University(ResultSet resultSet) throws SQLException {
+        this.id = resultSet.getInt("id");
+        this.name = resultSet.getString("name");
+        this.ambassadorName = resultSet.getString("ambassador_name");
+        this.imageUrl = resultSet.getString("image_url");
+        this.status = resultSet.getString("status");
     }
 
     public int getId() {
@@ -47,14 +63,6 @@ public class University {
 
     public void setAmbassadorName(String ambassadorName) {
         this.ambassadorName = ambassadorName;
-    }
-
-    public String getAmbassadorEmail() {
-        return ambassadorEmail;
-    }
-
-    public void setAmbassadorEmail(String ambassadorEmail) {
-        this.ambassadorEmail = ambassadorEmail;
     }
 
     public String getImageUrl() {

@@ -1,5 +1,11 @@
 package org.sefglobal.core.partnership.beans;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * Represent a society within a university
+ */
 public class Society {
     private int id;
     private String name;
@@ -16,6 +22,14 @@ public class Society {
         this.imageUrl = imageUrl;
         this.universityId = universityId;
         this.status = status;
+    }
+
+    public Society(ResultSet resultSet) throws SQLException {
+        this.id = resultSet.getInt("id");
+        this.name = resultSet.getString("name");
+        this.imageUrl = resultSet.getString("image_url");
+        this.universityId = resultSet.getInt("university_id");
+        this.status = resultSet.getString("status");
     }
 
     public int getId() {

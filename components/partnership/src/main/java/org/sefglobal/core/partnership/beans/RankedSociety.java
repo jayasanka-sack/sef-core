@@ -3,17 +3,13 @@ package org.sefglobal.core.partnership.beans;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Represent a university with engagement count
- */
-public class RankedUniversity extends University{
-
+public class RankedSociety extends Society{
     private int engagement;
 
-    public RankedUniversity() {
-    }
+    public RankedSociety() {
 
-    public RankedUniversity(ResultSet resultSet) throws SQLException {
+    }
+    public RankedSociety(ResultSet resultSet) throws SQLException {
         super(resultSet);
         this.engagement = resultSet.getInt("engagement");
     }

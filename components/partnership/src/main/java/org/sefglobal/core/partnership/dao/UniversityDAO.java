@@ -18,22 +18,29 @@ public class UniversityDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    /**
+     * Gets an university by universityId
+     * @param id universityId
+     * @return University
+     */
     public University getUniversity(int id) {
+
+        String sqlQuery = "" +
+                "SELECT " +
+                "   * " +
+                "FROM " +
+                "   university " +
+                "WHERE " +
+                "   id = ? " +
+                "AND " +
+                "   status='ACTIVE'";
+
         try {
-            University university = jdbcTemplate.queryForObject(
-                    "SELECT * FROM university WHERE id = ? AND status='ACTIVE'",
-                    new Object[]{id}, (rs, rowNum) -> {
-                        University u = new University();
-                        u.setId(id);
-                        u.setName(rs.getString("name"));
-                        u.setAmbassadorName(rs.getString("ambassador_name"));
-                        u.setAmbassadorEmail(rs.getString("ambassador_email"));
-                        u.setImageUrl(rs.getString("image_url"));
-                        u.setStatus(rs.getString("status"));
-                        return u;
-                    }
+            return jdbcTemplate.queryForObject(
+                    sqlQuery,
+                    new Object[]{id},
+                    (resultSet, rowNum) -> new University(resultSet)
             );
-            return university;
         } catch (DataAccessException e) {
             logger.error("Unable to get info of '" + id + "'", e);
         }
@@ -41,21 +48,25 @@ public class UniversityDAO {
         return null;
     }
 
-    public List<University> getAllUniversities(){
-        try {
-            List<University> result = jdbcTemplate.query("SELECT * FROM university WHERE status='ACTIVE'",
-                    (rs, rowNum) -> {
-                        University u = new University();
-                        u.setId(rs.getInt("id"));
-                        u.setName(rs.getString("name"));
-                        u.setAmbassadorName(rs.getString("ambassador_name"));
-                        u.setAmbassadorEmail(rs.getString("ambassador_email"));
-                        u.setImageUrl(rs.getString("image_url"));
-                        u.setStatus(rs.getString("status"));
-                        return u;
-                    });
+    /**
+     * Gets all active universities
+     * @return List of University
+     */
+    public List<University> getAllUniversities() {
 
-            return result;
+        String sqlQuery ="" +
+                "SELECT " +
+                "   * " +
+                "FROM " +
+                "   university " +
+                "WHERE " +
+                "status='ACTIVE'";
+
+        try {
+            return jdbcTemplate.query(
+                    sqlQuery,
+                    (resultSet, rowNum) -> new University(resultSet)
+            );
         } catch (DataAccessException e) {
             logger.error("Unable to get all university info", e);
         }
