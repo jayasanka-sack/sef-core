@@ -1,32 +1,24 @@
-package org.sefglobal.core.partnership.model;
+package org.sefglobal.core.partnership.beans;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-@Entity
-@Table(name = "event")
-public class Event extends AuditModel{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class Event {
     private int id;
-
-    @NotNull
-    @Column(name = "name", length = 100)
     private String name;
-
-    @NotNull
-    @Column(name = "url", length = 512)
     private String link;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "eventTime", nullable = false)
     private Date eventDate;
-
-    @NotNull
-    @Column(name = "status", length = 10)
     private String status;
+
+    public Event() {
+    }
+
+    public Event(int id, String name, String link, Date eventDate, String status) {
+        this.id = id;
+        this.name = name;
+        this.link = link;
+        this.eventDate = eventDate;
+        this.status = status;
+    }
 
     public int getId() {
         return id;
@@ -52,19 +44,19 @@ public class Event extends AuditModel{
         this.link = link;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public Date getEventDate() {
         return eventDate;
     }
 
     public void setEventDate(Date eventDate) {
         this.eventDate = eventDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
