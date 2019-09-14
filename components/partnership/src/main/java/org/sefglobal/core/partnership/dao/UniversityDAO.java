@@ -1,6 +1,8 @@
 package org.sefglobal.core.partnership.dao;
 
+import org.sefglobal.core.partnership.beans.CensoredUniversity;
 import org.sefglobal.core.partnership.beans.University;
+import org.sefglobal.core.partnership.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ public class UniversityDAO {
      * @param id universityId
      * @return University
      */
-    public University getUniversity(int id) {
+    public University getUniversity(int id) throws ResourceNotFoundException{
 
         String sqlQuery = "" +
                 "SELECT " +
@@ -40,6 +42,34 @@ public class UniversityDAO {
                     sqlQuery,
                     new Object[]{id},
                     (resultSet, rowNum) -> new University(resultSet)
+            );
+        } catch (DataAccessException e) {
+            logger.error("Unable to get info of '" + id + "'", e);
+            throw new ResourceNotFoundException("University not found");
+        }
+    }
+    /**
+     * Gets an university with hidden data by universityId
+     * @param id universityId
+     * @return University
+     */
+    public CensoredUniversity getCensoredUniversity(int id) {
+
+        String sqlQuery = "" +
+                "SELECT " +
+                "   * " +
+                "FROM " +
+                "   university " +
+                "WHERE " +
+                "   id = ? " +
+                "AND " +
+                "   status='ACTIVE'";
+
+        try {
+            return jdbcTemplate.queryForObject(
+                    sqlQuery,
+                    new Object[]{id},
+                    (resultSet, rowNum) -> new CensoredUniversity(resultSet)
             );
         } catch (DataAccessException e) {
             logger.error("Unable to get info of '" + id + "'", e);

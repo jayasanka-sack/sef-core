@@ -2,7 +2,6 @@ package org.sefglobal.core.partnership.beans;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
 /**
  * Represent an event in SEF. This can be a event or a campaign
@@ -12,18 +11,11 @@ public class Event {
     private int id;
     private String name;
     private String url;
-    private Date eventTime;
+    private long eventTime;
+    private long createdAt;
     private String status;
 
     public Event() {
-    }
-
-    public Event(int id, String name, String url, Date eventTime, String status) {
-        this.id = id;
-        this.name = name;
-        this.url = url;
-        this.eventTime = eventTime;
-        this.status = status;
     }
 
     /**
@@ -34,7 +26,8 @@ public class Event {
         this.id = resultSet.getInt("id");
         this.name = resultSet.getString("name");
         this.url = resultSet.getString("url");
-        this.eventTime = resultSet.getDate("event_time");
+        this.eventTime = resultSet.getLong("event_time");
+        this.createdAt = resultSet.getLong("created_at");
         this.status = resultSet.getString("status");
     }
 
@@ -62,11 +55,11 @@ public class Event {
         this.url = url;
     }
 
-    public Date getEventTime() {
+    public long getEventTime() {
         return eventTime;
     }
 
-    public void setEventTime(Date eventTime) {
+    public void setEventTime(long eventTime) {
         this.eventTime = eventTime;
     }
 
@@ -76,5 +69,13 @@ public class Event {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 }

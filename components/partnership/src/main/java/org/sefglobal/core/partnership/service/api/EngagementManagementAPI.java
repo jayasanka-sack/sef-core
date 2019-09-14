@@ -39,7 +39,7 @@ public class EngagementManagementAPI {
     }
 
     @GetMapping("/university/{id}")
-    public List<RankedSociety> getEngagementByUniversity(@PathVariable int id){
+    public RankedUniversity getEngagementByUniversity(@PathVariable int id) throws PartnershipAPIException{
         return engagementDAO.getEngagementByUniversity(id);
     }
 

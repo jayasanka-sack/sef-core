@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class EngagementDAO {
@@ -26,8 +27,12 @@ public class EngagementDAO {
     @Autowired
     private EventDAO eventDAO;
 
+    @Autowired
+    private UniversityDAO universityDAO;
+
     /**
      * Gets all Ranked Universities by engagement count
+     *
      * @return List of RankedUniversity
      */
     public List<RankedUniversity> getUniversityRanking() {
@@ -68,33 +73,82 @@ public class EngagementDAO {
         return null;
     }
 
+
+    public RankedUniversity getEngagementByUniversity(int id) throws ResourceNotFoundException{
+        String sqlQuery = "" +
+                "SELECT " +
+                "   s.*, " +
+                "   COUNT(e.event_id) as engagement " +
+                "FROM " +
+                "   university u " +
+                "INNER JOIN " +
+                "   society s " +
+                "ON " +
+                "   u.id = s.university_id " +
+                "INNER JOIN " +
+                "   engagement e " +
+                "ON " +
+                "   s.id = e.society_id " +
+                "WHERE " +
+                "   u.id = ? " +
+                "GROUP BY " +
+                "   s.id;";
+
+        RankedUniversity rankedUniversity =  new RankedUniversity(universityDAO.getUniversity(id));
+
+        // use atomic integer to count total engagement -- local variables are not allowed inside lambda functions
+        AtomicInteger totalEngagement = new AtomicInteger(0);
+
+        try {
+            List<RankedSociety> rankedSocieties = jdbcTemplate.query(
+                    sqlQuery,
+                    new Object[]{id},
+                    (rs, rowNum) -> {
+                        totalEngagement.set(totalEngagement.addAndGet(rs.getInt("engagement")));
+                        return new RankedSociety(rs);
+                    }
+            );
+            rankedUniversity.setSocieties(rankedSocieties);
+            rankedUniversity.setEngagement(totalEngagement.get());
+
+            return rankedUniversity;
+        } catch (DataAccessException e) {
+            logger.error("Unable to get all university info", e);
+        }
+        return null;
+    }
+
     /**
      * Adds an engagement to the DB
-     * @param eventId eventId
+     *
+     * @param eventId   eventId
      * @param societyId societyId
-     * @param ip ip address of the visitor
+     * @param ip        ip address of the visitor
      */
     private void saveEngagement(int eventId, int societyId, String ip) {
 
         // The interval between two engagements
         final int SECONDS_TO_SKIP = 100;
 
-        // Generate the interval value -- divided by 1000 to get in seconds
-        int intervalValue = (int) (new Date().getTime() / SECONDS_TO_SKIP / 1000);
+        long timestamp = new Date().getTime() / 1000;
+
+        // Generate the interval value
+        int intervalValue = (int) (timestamp / SECONDS_TO_SKIP);
 
         String sqlQuery = "" +
                 "INSERT INTO " +
                 "   engagement(" +
                 "       event_id, " +
                 "       society_id, " +
-                "       ip, " +
+                "       ip," +
+                "       created_at, " +
                 "       interval_value " +
                 "   ) " +
                 "VALUES " +
-                "   (?,?,?,?)";
+                "   (?,?,?,?,?)";
 
         try {
-            jdbcTemplate.update(sqlQuery, eventId, societyId, ip, intervalValue);
+            jdbcTemplate.update(sqlQuery, eventId, societyId, ip, timestamp, intervalValue);
         } catch (DuplicateKeyException ex) {
             // Do nothing if engagement duplicates within the interval
         } catch (DataAccessException e) {
@@ -104,9 +158,10 @@ public class EngagementDAO {
 
     /**
      * Creates an engagement and adds to the DB
-     * @param eventId eventId
+     *
+     * @param eventId   eventId
      * @param societyId societyId
-     * @param ip ip address of the visitor
+     * @param ip        ip address of the visitor
      */
     public Event createEngagement(int eventId, int societyId, String ip) throws ResourceNotFoundException {
 
@@ -121,7 +176,4 @@ public class EngagementDAO {
         throw new ResourceNotFoundException("Event not found");
     }
 
-    public List<RankedSociety> getEngagementByUniversity(int id) {
-        return null;
-    }
 }

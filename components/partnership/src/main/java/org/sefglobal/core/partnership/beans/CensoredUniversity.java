@@ -18,4 +18,12 @@ public class CensoredUniversity extends University {
         super(resultSet);
         this.ambassadorEmail = resultSet.getString("ambassador_email");
     }
+
+    public String getAmbassadorEmail() {
+        return ambassadorEmail;
+    }
+
+    public void setAmbassadorEmail(String ambassadorEmail) {
+        this.ambassadorEmail = ambassadorEmail;
+    }
 }
