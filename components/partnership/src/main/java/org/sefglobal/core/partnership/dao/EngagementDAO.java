@@ -74,7 +74,7 @@ public class EngagementDAO {
     }
 
 
-    public RankedUniversity getEngagementByUniversity(int id) throws ResourceNotFoundException{
+    public RankedUniversity  getEngagementByUniversity(int id) throws ResourceNotFoundException{
         String sqlQuery = "" +
                 "SELECT " +
                 "   s.*, " +

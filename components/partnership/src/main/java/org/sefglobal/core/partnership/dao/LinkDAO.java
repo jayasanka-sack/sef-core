@@ -1,0 +1,38 @@
+package org.sefglobal.core.partnership.dao;
+
+import org.sefglobal.core.partnership.beans.Link;
+import org.sefglobal.core.partnership.beans.Society;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public class LinkDAO {
+    private Logger logger = LoggerFactory.getLogger(LinkDAO.class);
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private Environment environment;
+
+    public List<Link> getAllLinksByEvent(int eventId){
+        String serverAddress = environment.getProperty("config.shareLinkAddress");
+        String sqlQuery = "SELECT * FROM society WHERE status='ACTIVE'";
+        try {
+            return jdbcTemplate.query(
+                    sqlQuery,
+                    (rs, rowNum) ->  new Link(new Society(rs), eventId, serverAddress)
+            );
+        }catch (DataAccessException e){
+            logger.error("Unable to get link info", e);
+        }
+        return null;
+    }
+}

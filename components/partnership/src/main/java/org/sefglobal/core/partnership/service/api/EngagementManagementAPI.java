@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/engagements")
 public class EngagementManagementAPI {
 
     @Autowired
@@ -23,12 +22,12 @@ public class EngagementManagementAPI {
     @Autowired
     private EventDAO eventDAO;
 
-    @GetMapping("/")
+    @GetMapping("/engagements")
     public List<RankedUniversity> getUniversityRanking(){
         return engagementDAO.getUniversityRanking();
     }
 
-    @PostMapping("/")
+    @PostMapping("/engagements")
     public Event addEngagement(@RequestBody Map<String,String> body) throws PartnershipAPIException {
 
         int eventId = Integer.parseInt(body.get("eventId"));
@@ -38,7 +37,7 @@ public class EngagementManagementAPI {
         return engagementDAO.createEngagement(eventId, societyId, ip);
     }
 
-    @GetMapping("/university/{id}")
+    @GetMapping("/engagements/university/{id}")
     public RankedUniversity getEngagementByUniversity(@PathVariable int id) throws PartnershipAPIException{
         return engagementDAO.getEngagementByUniversity(id);
     }

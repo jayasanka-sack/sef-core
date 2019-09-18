@@ -9,21 +9,19 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:9000")
 @RestController
-@RequestMapping("/universities")
 public class UniversityManagementAPI {
 
     @Autowired
     private UniversityDAO universityDAO;
 
-    @GetMapping("/")
+    @GetMapping("/universities")
     public List<University> getAllUniversities(HttpServletRequest request){
         System.out.println(request.getRemoteAddr());
         return universityDAO.getAllUniversities();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/universities/{id}")
     public University getUniversity(@PathVariable int id) throws PartnershipAPIException {
         return universityDAO.getUniversity(id);
     }
