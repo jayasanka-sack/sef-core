@@ -23,12 +23,11 @@ public class LinkDAO {
     private Environment environment;
 
     public List<Link> getAllLinksByEvent(int eventId){
-        String serverAddress = environment.getProperty("config.shareLinkAddress");
         String sqlQuery = "SELECT * FROM society WHERE status='ACTIVE'";
         try {
             return jdbcTemplate.query(
                     sqlQuery,
-                    (rs, rowNum) ->  new Link(new Society(rs), eventId, serverAddress)
+                    (rs, rowNum) ->  new Link(new Society(rs), eventId)
             );
         }catch (DataAccessException e){
             logger.error("Unable to get link info", e);
